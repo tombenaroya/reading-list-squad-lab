@@ -17,6 +17,7 @@ export function AddBookForm({ onAddBook, isSubmitting }: AddBookFormProps) {
   const [form, setForm] = useState(initialFormState)
 
   const isValid = form.title.trim().length > 0 && form.author.trim().length > 0
+  const notesLength = form.notes?.length ?? 0
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -83,7 +84,7 @@ export function AddBookForm({ onAddBook, isSubmitting }: AddBookFormProps) {
         </select>
       </label>
 
-      <label>
+      <label className="notes-field">
         Notes
         <textarea
           value={form.notes ?? ''}
@@ -93,7 +94,14 @@ export function AddBookForm({ onAddBook, isSubmitting }: AddBookFormProps) {
           placeholder="Optional personal notes"
           rows={3}
           maxLength={1000}
+          aria-describedby="notes-character-count"
         />
+        <span
+          id="notes-character-count"
+          className={`notes-counter${notesLength >= 1000 ? ' at-limit' : ''}`}
+        >
+          {notesLength} / 1000
+        </span>
       </label>
 
       <button type="submit" disabled={!isValid || isSubmitting}>

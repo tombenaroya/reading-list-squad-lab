@@ -45,13 +45,31 @@
 }
 
 .book-form input,
-.book-form select {
+.book-form select,
+.book-form textarea {
   background: var(--field-bg);
   border: 1px solid var(--border);
   border-radius: 10px;
   color: var(--text-h);
   font: inherit;
   padding: 10px 12px;
+}
+
+.book-form textarea {
+  min-height: 96px;
+  resize: vertical;
+}
+
+.notes-counter {
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 400;
+  justify-self: end;
+}
+
+.notes-counter.at-limit {
+  color: var(--accent);
+  font-weight: 700;
 }
 
 .book-form button {
@@ -125,6 +143,15 @@ th {
   text-transform: uppercase;
 }
 
+.notes-cell {
+  max-width: 320px;
+  overflow-wrap: anywhere;
+}
+
+.notes-empty {
+  color: var(--text);
+}
+
 .status-pill {
   border-radius: 999px;
   display: inline-flex;
@@ -146,6 +173,15 @@ th {
 @media (min-width: 720px) {
   .book-form {
     align-items: end;
-    grid-template-columns: 1fr 1fr 160px auto;
+    grid-template-columns: 1fr 1fr 160px;
+  }
+
+  .notes-field,
+  .book-form button {
+    grid-column: 1 / -1;
+  }
+
+  .book-form button {
+    justify-self: end;
   }
 }

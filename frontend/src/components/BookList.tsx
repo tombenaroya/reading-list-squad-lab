@@ -35,7 +35,13 @@ export function BookList({ books, isLoading }: BookListProps) {
                   {book.status}
                 </span>
               </td>
-              <td>{book.notes ?? ''}</td>
+              <td className="notes-cell">
+                {book.notes?.trim() ? (
+                  book.notes
+                ) : (
+                  <span className="notes-empty">—</span>
+                )}
+              </td>
             </tr>
           ))}
         </tbody>
