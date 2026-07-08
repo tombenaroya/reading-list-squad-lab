@@ -429,9 +429,158 @@ public sealed class BooksApiTests
         Assert.Equal(request.status, book.Status);
     }
 
-    private sealed record CreateBookRequest(string Title, string Author, string Status);
+    [Fact]
+    public async Task PostBooks_WithNotes_ReturnsCreatedBookWithNotes()
+    {
+        using var factory = new ReadingListApiFactory();
+        using var client = factory.CreateClient();
+        var request = new CreateBookRequest("Dune", "Frank Herbert", "unread", "A desert epic worth rereading.");
 
-    private sealed record BookResponse(Guid Id, string Title, string Author, string Status);
+        var response = await client.PostAsJsonAsync("/api/books", request);
+
+        Assert.Equal(HttpStatusCode.Created, response.StatusCode);
+        var book = await response.Content.ReadFromJsonAsync<BookResponse>();
+        Assert.NotNull(book);
+        Assert.Equal(request.Notes, book.Notes);
+    }
+
+    [Fact]
+    public async Task PostBooks_NotesAtMaxLength_ReturnsCreatedBookWithNotes()
+    {
+        using var factory = new ReadingListApiFactory();
+        using var client = factory.CreateClient();
+        var notes = new string('a', 1000);
+        var request = new CreateBookRequest("Dune", "Frank Herbert", "unread", notes);
+
+        var response = await client.PostAsJsonAsync("/api/books", request);
+
+        Assert.Equal(HttpStatusCode.Created, response.StatusCode);
+        var book = await response.Content.ReadFromJsonAsync<BookResponse>();
+        Assert.NotNull(book);
+        Assert.Equal(notes, book.Notes);
+    }
+
+    [Fact]
+    public async Task PostBooks_NotesTrimmedToMaxLength_ReturnsCreatedBookWithTrimmedNotes()
+    {
+        using var factory = new ReadingListApiFactory();
+        using var client = factory.CreateClient();
+        var trimmedNotes = new string('a', 1000);
+        var request = new CreateBookRequest("Dune", "Frank Herbert", "unread", $" {trimmedNotes} ");
+
+        var response = await client.PostAsJsonAsync("/api/books", request);
+
+        Assert.Equal(HttpStatusCode.Created, response.StatusCode);
+        var book = await response.Content.ReadFromJsonAsync<BookResponse>();
+        Assert.NotNull(book);
+        Assert.Equal(trimmedNotes, book.Notes);
+    }
+
+    [Fact]
+    public async Task GetBooks_WithNotes_ReturnsPersistedNotes()
+    {
+        using var factory = new ReadingListApiFactory();
+        using var client = factory.CreateClient();
+        var request = new CreateBookRequest("Dune", "Frank Herbert", "unread", "Loved the worldbuilding.");
+        var postResponse = await client.PostAsJsonAsync("/api/books", request);
+        var createdBook = await postResponse.Content.ReadFromJsonAsync<BookResponse>();
+        Assert.NotNull(createdBook);
+
+        var response = await client.GetAsync("/api/books");
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        var books = await response.Content.ReadFromJsonAsync<BookResponse[]>();
+        Assert.NotNull(books);
+        var book = Assert.Single(books);
+        Assert.Equal(createdBook.Id, book.Id);
+        Assert.Equal(request.Notes, book.Notes);
+    }
+
+    [Fact]
+    public async Task GetBooks_FilteredByStatus_WithNotes_ReturnsPersistedNotes()
+    {
+        using var factory = new ReadingListApiFactory();
+        using var client = factory.CreateClient();
+        var request = new CreateBookRequest("Parable of the Sower", "Octavia E. Butler", "read", "Essential dystopian fiction.");
+        var postResponse = await client.PostAsJsonAsync("/api/books", request);
+        var createdBook = await postResponse.Content.ReadFromJsonAsync<BookResponse>();
+        Assert.NotNull(createdBook);
+        await client.PostAsJsonAsync("/api/books", new CreateBookRequest("Dune", "Frank Herbert", "unread", "Different status."));
+
+        var response = await client.GetAsync("/api/books?status=read");
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        var books = await response.Content.ReadFromJsonAsync<BookResponse[]>();
+        Assert.NotNull(books);
+        var book = Assert.Single(books);
+        Assert.Equal(createdBook.Id, book.Id);
+        Assert.Equal(request.Notes, book.Notes);
+    }
+
+    [Fact]
+    public async Task PostBooks_WithoutNotes_ReturnsCreatedBookWithNullNotes()
+    {
+        using var factory = new ReadingListApiFactory();
+        using var client = factory.CreateClient();
+        var request = new CreateBookRequest("Dune", "Frank Herbert", "unread", null);
+
+        var response = await client.PostAsJsonAsync("/api/books", request);
+
+        Assert.Equal(HttpStatusCode.Created, response.StatusCode);
+        var book = await response.Content.ReadFromJsonAsync<BookResponse>();
+        Assert.NotNull(book);
+        Assert.Null(book.Notes);
+    }
+
+    [Fact]
+    public async Task PostBooks_WhitespaceNotes_ReturnsCreatedBookWithNullNotes()
+    {
+        using var factory = new ReadingListApiFactory();
+        using var client = factory.CreateClient();
+        var request = new CreateBookRequest("Dune", "Frank Herbert", "unread", "   ");
+
+        var response = await client.PostAsJsonAsync("/api/books", request);
+
+        Assert.Equal(HttpStatusCode.Created, response.StatusCode);
+        var book = await response.Content.ReadFromJsonAsync<BookResponse>();
+        Assert.NotNull(book);
+        Assert.Null(book.Notes);
+    }
+
+    [Fact]
+    public async Task PostBooks_NotesExceedingMaxLength_ReturnsValidationProblemWithNotesError()
+    {
+        using var factory = new ReadingListApiFactory();
+        using var client = factory.CreateClient();
+        var request = new CreateBookRequest("Dune", "Frank Herbert", "unread", new string('a', 1001));
+
+        var response = await client.PostAsJsonAsync("/api/books", request);
+
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        await AssertValidationProblemContainsErrorsAsync(response, "notes");
+    }
+
+    [Fact]
+    public async Task GetBookById_WithNotes_ReturnsPersistedNotes()
+    {
+        using var factory = new ReadingListApiFactory();
+        using var client = factory.CreateClient();
+        var request = new CreateBookRequest("Dune", "Frank Herbert", "unread", "Loved the worldbuilding.");
+        var postResponse = await client.PostAsJsonAsync("/api/books", request);
+        var createdBook = await postResponse.Content.ReadFromJsonAsync<BookResponse>();
+        Assert.NotNull(createdBook);
+
+        var response = await client.GetAsync($"/api/books/{createdBook.Id}");
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        var book = await response.Content.ReadFromJsonAsync<BookResponse>();
+        Assert.NotNull(book);
+        Assert.Equal(request.Notes, book.Notes);
+    }
+
+    private sealed record CreateBookRequest(string Title, string Author, string Status, string? Notes = null);
+
+    private sealed record BookResponse(Guid Id, string Title, string Author, string Status, string? Notes = null);
 
     private sealed record ValidationProblemResponse(Dictionary<string, string[]> Errors);
 

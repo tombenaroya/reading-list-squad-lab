@@ -10,7 +10,7 @@ From `backend/`:
 dotnet run --project ReadingList.Api
 ```
 
-The local development URL is `http://localhost:5180`.
+The local development URL is `http://localhost:5180`. The SQLite schema is managed by EF Core migrations, which are applied automatically at API startup for relational providers.
 
 ## Endpoints
 
@@ -22,11 +22,12 @@ Request:
 {
   "title": "Dune",
   "author": "Frank Herbert",
-  "status": "unread"
+  "status": "unread",
+  "notes": "Optional notes up to 1000 characters"
 }
 ```
 
-Returns `201 Created` with the created book. `title` and `author` must be non-null and non-whitespace.
+Returns `201 Created` with the created book. `title` and `author` must be non-null and non-whitespace. `notes` is optional, trimmed, and limited to 1000 characters.
 
 Invalid requests return `400 Bad Request` as `application/problem+json` with machine-readable validation errors:
 
@@ -51,7 +52,8 @@ Returns `200 OK` with all books:
     "id": "00000000-0000-0000-0000-000000000000",
     "title": "Dune",
     "author": "Frank Herbert",
-    "status": "unread"
+    "status": "unread",
+    "notes": "Optional notes up to 1000 characters"
   }
 ]
 ```

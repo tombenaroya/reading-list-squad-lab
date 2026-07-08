@@ -22,6 +22,7 @@ export function BookList({ books, isLoading }: BookListProps) {
             <th scope="col">Title</th>
             <th scope="col">Author</th>
             <th scope="col">Status</th>
+            <th scope="col">Notes</th>
           </tr>
         </thead>
         <tbody>
@@ -33,6 +34,13 @@ export function BookList({ books, isLoading }: BookListProps) {
                 <span className={`status-pill status-${book.status}`}>
                   {book.status}
                 </span>
+              </td>
+              <td className="notes-cell">
+                {book.notes?.trim() ? (
+                  book.notes
+                ) : (
+                  <span className="notes-empty">—</span>
+                )}
               </td>
             </tr>
           ))}
