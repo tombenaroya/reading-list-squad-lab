@@ -33,7 +33,10 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    db.Database.EnsureCreated();
+    if (db.Database.IsRelational())
+    {
+        db.Database.Migrate();
+    }
 }
 
 app.UseCors(CorsPolicyName);
@@ -52,7 +55,12 @@ app.MapPost("/api/books", async (CreateBookRequest request, AppDbContext db) =>
         errors["author"] = ["Author is required."];
     }
 
-    if (request.Notes is { Length: > Book.MaxNotesLength })
+    var trimmedTitle = request.Title?.Trim();
+    var trimmedAuthor = request.Author?.Trim();
+    var trimmedNotes = request.Notes?.Trim();
+    var normalizedNotes = string.IsNullOrEmpty(trimmedNotes) ? null : trimmedNotes;
+
+    if (normalizedNotes is { Length: > Book.MaxNotesLength })
     {
         errors["notes"] = [$"Notes must be {Book.MaxNotesLength} characters or fewer."];
     }
@@ -62,14 +70,12 @@ app.MapPost("/api/books", async (CreateBookRequest request, AppDbContext db) =>
         return Results.ValidationProblem(errors);
     }
 
-    var trimmedNotes = request.Notes?.Trim();
-
     var book = new Book
     {
-        Title = request.Title.Trim(),
-        Author = request.Author.Trim(),
+        Title = trimmedTitle!,
+        Author = trimmedAuthor!,
         Status = request.Status,
-        Notes = string.IsNullOrEmpty(trimmedNotes) ? null : trimmedNotes
+        Notes = normalizedNotes
     };
 
     db.Books.Add(book);
