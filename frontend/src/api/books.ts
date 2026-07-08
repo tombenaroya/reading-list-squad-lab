@@ -8,12 +8,14 @@ export type Book = {
   title: string
   author: string
   status: BookStatus
+  notes?: string | null
 }
 
 export type AddBookInput = {
   title: string
   author: string
   status: BookStatus
+  notes?: string
 }
 
 async function parseJsonResponse<T>(response: Response, fallbackMessage: string) {

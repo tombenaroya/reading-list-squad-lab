@@ -15,6 +15,7 @@ public sealed class AppDbContext(DbContextOptions<AppDbContext> options) : DbCon
             entity.Property(book => book.Title).IsRequired();
             entity.Property(book => book.Author).IsRequired();
             entity.Property(book => book.Status).HasConversion<string>().IsRequired();
+            entity.Property(book => book.Notes).HasMaxLength(Book.MaxNotesLength);
         });
     }
 }

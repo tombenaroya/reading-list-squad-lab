@@ -52,16 +52,24 @@ app.MapPost("/api/books", async (CreateBookRequest request, AppDbContext db) =>
         errors["author"] = ["Author is required."];
     }
 
+    if (request.Notes is { Length: > Book.MaxNotesLength })
+    {
+        errors["notes"] = [$"Notes must be {Book.MaxNotesLength} characters or fewer."];
+    }
+
     if (errors.Count > 0)
     {
         return Results.ValidationProblem(errors);
     }
 
+    var trimmedNotes = request.Notes?.Trim();
+
     var book = new Book
     {
         Title = request.Title.Trim(),
         Author = request.Author.Trim(),
-        Status = request.Status
+        Status = request.Status,
+        Notes = string.IsNullOrEmpty(trimmedNotes) ? null : trimmedNotes
     };
 
     db.Books.Add(book);
@@ -105,7 +113,7 @@ app.MapGet("/api/books/{id:guid}", async (Guid id, AppDbContext db) =>
 
 app.Run();
 
-public sealed record CreateBookRequest(string Title, string Author, BookStatus Status);
+public sealed record CreateBookRequest(string Title, string Author, BookStatus Status, string? Notes = null);
 
 public partial class Program
 {

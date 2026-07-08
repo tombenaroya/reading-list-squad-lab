@@ -10,6 +10,7 @@ const initialFormState: AddBookInput = {
   title: '',
   author: '',
   status: 'unread',
+  notes: '',
 }
 
 export function AddBookForm({ onAddBook, isSubmitting }: AddBookFormProps) {
@@ -24,10 +25,13 @@ export function AddBookForm({ onAddBook, isSubmitting }: AddBookFormProps) {
       return
     }
 
+    const trimmedNotes = form.notes?.trim() ?? ''
+
     const wasAdded = await onAddBook({
       title: form.title.trim(),
       author: form.author.trim(),
       status: form.status,
+      ...(trimmedNotes ? { notes: trimmedNotes } : {}),
     })
 
     if (wasAdded) {
@@ -77,6 +81,19 @@ export function AddBookForm({ onAddBook, isSubmitting }: AddBookFormProps) {
           <option value="unread">unread</option>
           <option value="read">read</option>
         </select>
+      </label>
+
+      <label>
+        Notes
+        <textarea
+          value={form.notes ?? ''}
+          onChange={(event) =>
+            setForm((current) => ({ ...current, notes: event.target.value }))
+          }
+          placeholder="Optional personal notes"
+          rows={3}
+          maxLength={1000}
+        />
       </label>
 
       <button type="submit" disabled={!isValid || isSubmitting}>

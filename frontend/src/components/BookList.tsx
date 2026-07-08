@@ -22,6 +22,7 @@ export function BookList({ books, isLoading }: BookListProps) {
             <th scope="col">Title</th>
             <th scope="col">Author</th>
             <th scope="col">Status</th>
+            <th scope="col">Notes</th>
           </tr>
         </thead>
         <tbody>
@@ -34,6 +35,7 @@ export function BookList({ books, isLoading }: BookListProps) {
                   {book.status}
                 </span>
               </td>
+              <td>{book.notes ?? ''}</td>
             </tr>
           ))}
         </tbody>
