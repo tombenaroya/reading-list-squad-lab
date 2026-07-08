@@ -1,3 +1,32 @@
 {
-  "agents": {}
+  "agents": {
+    "lead": {
+      "persistent_name": "Messi",
+      "universe": "World Cup Footballers",
+      "created_at": "2026-07-08T11:21:49+03:00",
+      "legacy_named": false,
+      "status": "active"
+    },
+    "backend": {
+      "persistent_name": "Kroos",
+      "universe": "World Cup Footballers",
+      "created_at": "2026-07-08T11:21:49+03:00",
+      "legacy_named": false,
+      "status": "active"
+    },
+    "frontend": {
+      "persistent_name": "Dembélé",
+      "universe": "World Cup Footballers",
+      "created_at": "2026-07-08T11:21:49+03:00",
+      "legacy_named": false,
+      "status": "active"
+    },
+    "tester": {
+      "persistent_name": "Neuer",
+      "universe": "World Cup Footballers",
+      "created_at": "2026-07-08T11:21:49+03:00",
+      "legacy_named": false,
+      "status": "active"
+    }
+  }
 }

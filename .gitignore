@@ -8,3 +8,7 @@
 .squad/.cache/
 # Squad: SubSquad activation file (local to this machine)
 .squad-workstream
+reading-list.db*
+.DS_Store
+bin/
+obj/

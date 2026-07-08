@@ -6,14 +6,15 @@ How to decide who handles what.
 
 | Work Type | Route To | Examples |
 |-----------|----------|----------|
-| {domain 1} | {Name} | {example tasks} |
-| {domain 2} | {Name} | {example tasks} |
-| {domain 3} | {Name} | {example tasks} |
-| Code review | {Name} | Review PRs, check quality, suggest improvements |
-| Testing | {Name} | Write tests, find edge cases, verify fixes |
-| Scope & priorities | {Name} | What to build next, trade-offs, decisions |
+| Backend / API / data | Kroos | .NET 10 minimal API endpoints, SQLite schema & data access, validation |
+| Frontend / UI | Dembélé | React + TypeScript components, state, API integration, UX |
+| Architecture & scope | Messi | What to build next, trade-offs, structure, decisions |
+| Code review | Messi | Review PRs, check quality, suggest improvements |
+| Testing | Neuer | Write tests, find edge cases, verify fixes |
+| Scope & priorities | Messi | What to build next, trade-offs, decisions |
 | Session logging | Scribe | Automatic — never needs routing |
 | RAI review | Rai | Content safety, bias checks, credential detection, ethical review |
+| Verification / devil's advocate | Fact Checker | Verify claims, challenge assumptions, pre-mortems |
 
 ## Issue Routing
 

@@ -1,9 +1,10 @@
 ---
-updated_at: 2026-07-08T08:17:27.691Z
-focus_area: Initial setup
+updated_at: 2026-07-08T11:21:49+03:00
+focus_area: Team hired — ready to scaffold the Reading List app
 active_issues: []
 ---
 
 # What We're Focused On
 
-Getting started. Updated by coordinator at session start.
+Team just assembled for "Reading List" (.NET 10 minimal API + React/TypeScript + SQLite).
+Next up: project scaffolding. Updated by coordinator at session start.

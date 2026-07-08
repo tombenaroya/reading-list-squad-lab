@@ -1,0 +1,87 @@
+import { useState } from 'react'
+import type { AddBookInput, BookStatus } from '../api/books'
+
+type AddBookFormProps = {
+  onAddBook: (input: AddBookInput) => Promise<boolean>
+  isSubmitting: boolean
+}
+
+const initialFormState: AddBookInput = {
+  title: '',
+  author: '',
+  status: 'unread',
+}
+
+export function AddBookForm({ onAddBook, isSubmitting }: AddBookFormProps) {
+  const [form, setForm] = useState(initialFormState)
+
+  const isValid = form.title.trim().length > 0 && form.author.trim().length > 0
+
+  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+
+    if (!isValid) {
+      return
+    }
+
+    const wasAdded = await onAddBook({
+      title: form.title.trim(),
+      author: form.author.trim(),
+      status: form.status,
+    })
+
+    if (wasAdded) {
+      setForm(initialFormState)
+    }
+  }
+
+  return (
+    <form className="book-form" onSubmit={handleSubmit}>
+      <label>
+        Title
+        <input
+          type="text"
+          value={form.title}
+          onChange={(event) =>
+            setForm((current) => ({ ...current, title: event.target.value }))
+          }
+          placeholder="e.g. Dune"
+          required
+        />
+      </label>
+
+      <label>
+        Author
+        <input
+          type="text"
+          value={form.author}
+          onChange={(event) =>
+            setForm((current) => ({ ...current, author: event.target.value }))
+          }
+          placeholder="e.g. Frank Herbert"
+          required
+        />
+      </label>
+
+      <label>
+        Status
+        <select
+          value={form.status}
+          onChange={(event) =>
+            setForm((current) => ({
+              ...current,
+              status: event.target.value as BookStatus,
+            }))
+          }
+        >
+          <option value="unread">unread</option>
+          <option value="read">read</option>
+        </select>
+      </label>
+
+      <button type="submit" disabled={!isValid || isSubmitting}>
+        {isSubmitting ? 'Adding…' : 'Add book'}
+      </button>
+    </form>
+  )
+}

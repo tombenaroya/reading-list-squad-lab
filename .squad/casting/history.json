@@ -1,4 +1,21 @@
 {
-  "universe_usage_history": [],
-  "assignment_cast_snapshots": {}
+  "universe_usage_history": [
+    {
+      "universe": "World Cup Footballers",
+      "assignment_id": "reading-list-2026-07-08",
+      "used_at": "2026-07-08T11:21:49+03:00"
+    }
+  ],
+  "assignment_cast_snapshots": {
+    "reading-list-2026-07-08": {
+      "universe": "World Cup Footballers",
+      "agents": {
+        "lead": "Messi",
+        "backend": "Kroos",
+        "frontend": "Dembélé",
+        "tester": "Neuer"
+      },
+      "created_at": "2026-07-08T11:21:49+03:00"
+    }
+  }
 }

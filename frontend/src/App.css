@@ -1,0 +1,151 @@
+.app-shell {
+  display: grid;
+  gap: 24px;
+  margin: 0 auto;
+  max-width: 920px;
+  padding: 48px 20px;
+}
+
+.page-header {
+  text-align: left;
+}
+
+.page-header p {
+  max-width: 620px;
+}
+
+.eyebrow {
+  color: var(--accent);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+}
+
+.card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  box-shadow: var(--shadow);
+  padding: 24px;
+  text-align: left;
+}
+
+.book-form {
+  display: grid;
+  gap: 16px;
+}
+
+.book-form label {
+  color: var(--text-h);
+  display: grid;
+  font-weight: 600;
+  gap: 6px;
+}
+
+.book-form input,
+.book-form select {
+  background: var(--field-bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  color: var(--text-h);
+  font: inherit;
+  padding: 10px 12px;
+}
+
+.book-form button {
+  background: var(--accent);
+  border: 0;
+  border-radius: 999px;
+  color: white;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 700;
+  justify-self: start;
+  padding: 10px 18px;
+}
+
+.book-form button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.error-message {
+  background: var(--error-bg);
+  border: 1px solid var(--error-border);
+  border-radius: 12px;
+  color: var(--error-text);
+  padding: 12px 14px;
+  text-align: left;
+}
+
+.status-filter {
+  display: inline-flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.status-filter button {
+  background: var(--field-bg);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  color: var(--text-h);
+  cursor: pointer;
+  font: inherit;
+  font-weight: 700;
+  padding: 8px 14px;
+}
+
+.status-filter button.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: white;
+}
+
+.table-wrap {
+  overflow-x: auto;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+th,
+td {
+  border-bottom: 1px solid var(--border);
+  padding: 12px 8px;
+  text-align: left;
+}
+
+th {
+  color: var(--text-h);
+  font-size: 14px;
+  text-transform: uppercase;
+}
+
+.status-pill {
+  border-radius: 999px;
+  display: inline-flex;
+  font-size: 14px;
+  font-weight: 700;
+  padding: 4px 10px;
+}
+
+.status-unread {
+  background: var(--accent-bg);
+  color: var(--accent);
+}
+
+.status-read {
+  background: var(--success-bg);
+  color: var(--success-text);
+}
+
+@media (min-width: 720px) {
+  .book-form {
+    align-items: end;
+    grid-template-columns: 1fr 1fr 160px auto;
+  }
+}
